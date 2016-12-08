@@ -29,6 +29,16 @@
 -type handlers() :: [handler()].
 -export_type([handlers/0]).
 
+-type error_code() :: integer().
+-type error_message() :: list() | binary().
+-type error_response() :: { error,
+                            { server,
+                              error_code(),
+                              error_message(),
+                              []
+                            }
+                          }.
+
 %% Aplication
 start() ->
     application:ensure_all_started(aberth),
@@ -58,17 +68,24 @@ start_server(NbAcceptors, Port, Handlers) ->
 
 %% Utility funs
 
-no_such_module(Module) ->
-	Msg = list_to_binary(io_lib:format("Module '~p' not found", [Module])),
-	{error, {server, 1,	<<"ServerError">>, Msg, []}}.
+-spec server_error(error_code(), error_message()) -> error_response().
+server_error(Code, Msg) ->
+	{error, {server, Code,	<<"ServerError">>, list_to_binary(Msg), []}}.
 
+-spec no_such_module(module()) -> error_response().
+no_such_module(Mod) ->
+	Msg = io_lib:format("Module '~p' not found", [Mod]),
+  server_error(1, Msg).
+
+-spec not_allowed(atom()) -> error_response().
 not_allowed(Func) ->
-	Msg = list_to_binary(io_lib:format("Method '~p' not allowed", [Func])),
-	{error, {server, 2,	<<"ServerError">>, Msg, []}}.
+	Msg = io_lib:format("Method '~p' not allowed", [Func]),
+  server_error(2, Msg).
 
+-spec not_loaded(module()) -> error_response().
 not_loaded(Mod) ->
-	Msg = list_to_binary(io_lib:format("Module '~p' not loaded", [Mod])),
-	{error, {server, 1, <<"ServerError">>, Msg, []}}.
+	Msg = io_lib:format("Module '~p' not loaded", [Mod]),
+  server_error(1, Msg).
 
 %% Client API funs
 
