@@ -41,8 +41,8 @@
 
 %% Aplication
 start() ->
-    application:ensure_all_started(aberth),
-    ok.
+  application:ensure_all_started(aberth),
+  ok.
 
 stop() ->
 	application:stop(aberth).
