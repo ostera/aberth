@@ -39,6 +39,9 @@
                             }
                           }.
 
+-type server_port() :: integer().
+-type server_acceptors() :: integer().
+
 %% Aplication
 start() ->
   application:ensure_all_started(aberth),
@@ -48,7 +51,7 @@ stop() ->
 	application:stop(aberth).
 
 %% Starting and loading aberth server
--spec start_server(integer(), integer(), aberth:handlers()) -> {ok, pid()} | {error, term()}.
+-spec start_server(server_port(), server_acceptors(), aberth:handlers()) -> {ok, pid()} | {error, term()}.
 start_server(NbAcceptors, Port, Handlers) ->
 %% @doc start aberth BERT-RPC server
 %%
