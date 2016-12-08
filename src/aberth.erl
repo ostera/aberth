@@ -64,7 +64,7 @@ no_such_module(Module) ->
 
 not_allowed(Func) ->
 	Msg = list_to_binary(io_lib:format("Method '~p' not allowed", [Func])),
-	{error, {server, 2,	<<"ServerError">>, Msg, []}}.	
+	{error, {server, 2,	<<"ServerError">>, Msg, []}}.
 
 not_loaded(Mod) ->
 	Msg = list_to_binary(io_lib:format("Module '~p' not loaded", [Mod])),
